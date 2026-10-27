@@ -32,7 +32,6 @@ button:focus-visible{outline:2px solid var(--yl);outline-offset:1px}
 #vs{padding:6px 12px 0;display:flex;gap:8px;flex-wrap:wrap}
 #vs button{font:inherit;background:var(--blue);color:var(--fg);border:1px solid var(--grey);padding:0 8px;cursor:pointer}
 #vs button.on{background:var(--grey);color:#000}
-#code img{display:block;max-width:100%;height:auto;border:2px solid var(--grey)}
 pre{margin:0;padding:10px 12px;flex:1;overflow-x:auto;color:var(--fg);font:inherit;white-space:pre;tab-size:4}
 .c{color:var(--cm)}
 .st{background:var(--grey);color:#000;display:flex;justify-content:space-between;padding:0 10px;gap:10px;flex-wrap:wrap}
@@ -242,7 +241,25 @@ START:  MOV AX,MDATA
 MCODE ENDS
 END START`}]},
 
-{v:[{t:"Que 6 : PALINDROME",
+{v:[{t:"Que 6 : MODIFYING FLAG REGISTER",
+c:`MSTACK SEGMENT
+    DB 40 DUP(0)
+MSTACK ENDS
+MCODE SEGMENT
+    ASSUME CS:MCODE, SS:MSTACK
+START:  MOV AX,MSTACK
+    MOV SS,AX
+    MOV SP,0028H
+    PUSHF
+    POP AX
+    OR AX,0FFFFH
+    PUSH AX
+    POPF
+    INT 3
+MCODE ENDS
+END START`}]},
+
+{v:[{t:"Que 7 : PALINDROME",
 c:`MDATA SEGMENT
     PAL DB "YES PALINDROME$"
     NPAL DB "NOT PALINDROME$"
@@ -274,7 +291,7 @@ NA: LEA DX,NPAL
 MCODE ENDS
 END START`}]},
 
-{v:[{t:"Que 7 : BIOS FUNCTION",
+{v:[{t:"Que 8 : BIOS FUNCTION",
 c:`MCODE SEGMENT
     ASSUME CS:MCODE
 START:  MOV AH,10H
@@ -295,27 +312,7 @@ START:  MOV AH,10H
     INT 10H
     INT 3
 MCODE ENDS
-END START`}]},
-
-{v:[{t:"Que 8 : MODIFYING FLAG REGISTER",
-c:`MSTACK SEGMENT
-    DB 40 DUP(0)
-MSTACK ENDS
-MCODE SEGMENT
-    ASSUME CS:MCODE, SS:MSTACK
-START:  MOV AX,MSTACK
-    MOV SS,AX
-    MOV SP,0028H
-    PUSHF
-    POP AX
-    OR AX,0FFFFH
-    PUSH AX
-    POPF
-    INT 3
-MCODE ENDS
-END START`}]},
-
-{v:[{t:"Que 9: Bakchod Group",img:"https://raw.githubusercontent.com/examcheat/coa/refs/heads/main/WhatsApp%20Image%202026-10-27%20at%204.47.23%20PM.jpeg",c:""}]}
+END START`}]}
 ];
 
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
@@ -323,16 +320,16 @@ var N=Q.length-1,cur=0,vi=0,text='';
 var $=function(i){return document.getElementById(i)};
 function show(){
   var v=Q[cur].v[vi];text=v.c;
-  $('ttl').textContent=cur?' C:\\Q'+cur+(v.img?'.JPG ':'.ASM '):' C:\\NONAME.ASM ';
+  $('ttl').textContent=cur?' C:\\Q'+cur+'.ASM ':' C:\\NONAME.ASM ';
   $('qt').textContent=v.t;
-  $('code').innerHTML=v.img?'<img src="'+v.img+'" alt="Que 9" onerror="this.outerHTML=\'Image could not be loaded. Check internet connection.\'">':(esc(text)||' ');
+  $('code').innerHTML=esc(text)||' ';
   $('pos').textContent='Q:'+cur+'/'+N+'   Line:1   Col:1';
   document.title=cur?'Q'+cur+' - COA Practical Exam 2026':'COA Practical Exam 2026';
   Array.prototype.forEach.call($('qs').querySelectorAll('button'),function(b,i){b.className=i===cur?'on':''});
   var vs=$('vs');vs.innerHTML='';
   if(Q[cur].v.length>1)Q[cur].v.forEach(function(x,i){var b=document.createElement('button');b.type='button';b.textContent=x.n;b.className=i===vi?'on':'';b.onclick=function(){vi=i;show()};vs.appendChild(b)});
   $('cp').textContent='[ Copy Code ]';$('cp').className='';
-  $('cp').style.visibility=(cur&&!v.img)?'visible':'hidden';
+  $('cp').style.visibility=cur?'visible':'hidden';
 }
 function go(i){if(i<0||i>N)return;cur=i;vi=0;show();window.scrollTo(0,0)}
 Q.forEach(function(_,i){var b=document.createElement('button');b.type='button';b.textContent=i;b.title=i?'Question '+i:'Blank screen';b.onclick=function(){go(i)};$('qs').appendChild(b)});
