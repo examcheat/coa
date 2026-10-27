@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COA Practical Exam 2026 - C:\CODE.ASM</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--blue:#0000aa;--grey:#aaaaaa;--fg:#ffffff;--cm:#55ffff;--hot:#aa0000;--yl:#ffff55;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000}}
+:root[data-theme="dark"]{--bg:#000}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:'VT323','Courier New',monospace;font-size:20px;line-height:1.2}
+.scr{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;min-height:100vh;padding:0 4px}
+.menu{background:var(--grey);color:#000;padding:2px 10px;display:flex;gap:18px;flex-wrap:wrap}
+.menu b{color:var(--hot);font-weight:400}
+.qs{background:var(--grey);border-top:1px solid #555;display:flex;flex-wrap:wrap;gap:4px;padding:3px 6px;align-items:center;color:#000}
+.qs span{margin-right:6px}
+.qs button{font:inherit;background:var(--grey);color:#000;border:0;padding:0 8px;cursor:pointer}
+.qs button:hover{background:#fff}
+.qs button.on{background:#000;color:var(--grey)}
+button:focus-visible{outline:2px solid var(--yl);outline-offset:1px}
+.box{flex:1;background:var(--blue);border:4px double var(--grey);margin:6px 0;display:flex;flex-direction:column;min-width:0}
+.ttl{text-align:center;margin-top:-14px}
+.ttl span{background:var(--grey);color:#000;padding:0 8px}
+.qrow{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-bottom:2px solid var(--grey)}
+.qt{flex:1;color:var(--yl);min-width:0}
+#cp{font:inherit;background:var(--grey);color:#000;border:0;padding:2px 12px;cursor:pointer;box-shadow:3px 3px 0 #000;white-space:nowrap}
+#cp:active{box-shadow:none;transform:translate(3px,3px)}
+#cp.ok{background:#55ff55}
+#vs{padding:6px 12px 0;display:flex;gap:8px;flex-wrap:wrap}
+#vs button{font:inherit;background:var(--blue);color:var(--fg);border:1px solid var(--grey);padding:0 8px;cursor:pointer}
+#vs button.on{background:var(--grey);color:#000}
+pre{margin:0;padding:10px 12px;flex:1;overflow-x:auto;color:var(--fg);font:inherit;white-space:pre;tab-size:4}
+.c{color:var(--cm)}
+.st{background:var(--grey);color:#000;display:flex;justify-content:space-between;padding:0 10px;gap:10px;flex-wrap:wrap}
+@media (max-width:560px){body{font-size:17px}.qrow{flex-direction:column}#cp{align-self:flex-end}}
+</style>
+</head>
+<body>
+<div class="scr">
+  <div class="menu"><span><b>F</b>ile</span><span><b>E</b>dit</span><span><b>S</b>earch</span><span><b>V</b>iew</span><span><b>O</b>ptions</span><span><b>H</b>elp</span></div>
+  <div class="qs" id="qs"><span>Q.No:</span></div>
+  <div class="box">
+    <div class="ttl"><span id="ttl"></span></div>
+    <div class="qrow"><div class="qt" id="qt"></div><button id="cp" type="button">[ Copy Code ]</button></div>
+    <div id="vs"></div>
+    <pre id="code"></pre>
+  </div>
+  <div class="st"><span>F1=Help | Use &larr; &rarr; keys to change question</span><span id="pos"></span></div>
+</div>
+<script>
+var Q=[
+{blank:1,v:[{t:"",c:""}]},
+{v:[{t:"Que 1",
+c:`MDATA SEGMENT
+    RESULT DW 0000,0000,0000,0000,0000,0000
+MDATA ENDS
+MCODE SEGMENT
+    ASSUME CS:MCODE, DS:MDATA
+START:  MOV AX,MDATA
+    MOV DS,AX
+    LEA SI,RESULT
+    MOV AX,5566H
+    ADD AX,1122H
+    MOV [SI],AX
+    INC SI
+    INC SI
+
+    MOV AX,5566H
+    SUB AX,1122H
+    MOV [SI],AX
+    INC SI
+    INC SI
+
+    MOV AX,5566H
+    MOV CX,1122H
+    MUL CX
+    MOV [SI],AX
+    INC SI
+    INC SI
+    MOV [SI],DX
+    INC SI
+    INC SI
+
+    MOV DX,0000
+    MOV AX,5566H
+    MOV CX,1122H
+    DIV CX
+    MOV [SI],AX
+    INC SI
+    INC SI
+    MOV [SI],DX
+    INT 3
+MCODE ENDS
+    END START`}]},
+
+{v:[{n:"A : Block Transfer",t:"Que 2 A : BLOCK TRANSFER",
+c:`MDATA SEGMENT
+    SOURCE DB 11H,22H,33H,44H,55H,66H,77H,88H,99H,0AAH
+    DEST DB 00,00,00,00,00,00,00,00,00,00
+MDATA ENDS
+MCODE SEGMENT
+    ASSUME CS:MCODE, DS:MDATA
+START:  MOV AX,MDATA
+    MOV DS,AX
+    LEA SI,SOURCE
+    LEA BX,DEST
+    MOV CL,0AH
+UP: MOV AL,[SI]
+    MOV [BX],AL
+    INC SI
+    INC BX
+    DEC CL
+    JNZ UP
+    INT 3
+MCODE ENDS
+END START`},
+{n:"B : Block Exchange",t:"Que 2 B : BLOCK EXCHANGE",
+c:`MDATA SEGMENT
+    BL1 DB 11H,22H,33H,44H,55H,66H,77H,88H,99H,0AAH
+    BL2 DB 00,00,00,00,00,00,00,00,00,00
+MDATA ENDS
+MCODE SEGMENT
+    ASSUME CS:MCODE, DS:MDATA
+START:  MOV AX,MDATA
+    MOV DS,AX
+    LEA SI,BL1
+    LEA BX,BL2
+    MOV CL,0AH
+UP: MOV AL,[SI]
+    XCHG AL,[BX]
+    MOV [SI],AL
+    INC SI
+    INC BX
+    DEC CL
+    JNZ UP
+    INT 3
+MCODE ENDS
+END START`}]},
+
+{v:[{t:"Que 3 : BLOCK TRANSFER USING STRING INSTRUCTION",
+c:`MEXTRA SEGMENT
+    DEST DB 00,00,00,00,00,00,00,00,00,00
+MEXTRA ENDS
+MDATA SEGMENT
+    SOURCE DB 11H,22H,33H,44H,55H,66H,77H,88H,99H,0AAH
+MDATA ENDS
+MCODE SEGMENT
+    ASSUME CS:MCODE, DS:MDATA, ES:MEXTRA
+START:  MOV AX,MDATA
+    MOV DS,AX
+    MOV AX,MEXTRA
+    MOV ES,AX
+    LEA SI,SOURCE
+    LEA DI,DEST
+    MOV CX,000AH
+    CLD
+    REP MOVSB
+    INT 3
+MCODE ENDS
+END START`}]},
+
+{v:[{t:"Que 4 : PACKED BCD",
+c:`MDATA SEGMENT
+    DATA DB 78H,59H
+    RESULT DB 00,00
+MDATA ENDS
+MCODE SEGMENT
+    ASSUME CS:MCODE, DS:MDATA
+START:  MOV AX,MDATA
+    MOV DS,AX
+    LEA SI,DATA
+    LEA BX,RESULT
+    MOV AL,[SI]
+    INC SI
+    ADD AL,[SI]
+    DAA
+    MOV [BX],AL
+    INC BX
+    DEC SI
+    MOV AL,[SI]
+    INC SI
+    SUB AL,[SI]
+    DAS
+    MOV [BX],AL
+    INT 3
+MCODE ENDS
+END START`}]},
+
+{v:[{t:"Que 5 : UNPACKED BCD",
+c:`MDATA SEGMENT
+    DATA DB 09,05
+    RESULT DW 0000,0000,0000,0000
+MDATA ENDS
+MCODE SEGMENT
+    ASSUME CS:MCODE, DS:MDATA
+START:  MOV AX,MDATA
+    MOV DS,AX
+    LEA SI,DATA
+    LEA BX,RESULT
+    MOV AL,[SI]
+    INC SI
+    ADD AL,[SI]
+    MOV AH,00
+    AAA
+    MOV [BX],AX
+    INC BX
+    INC BX
+    DEC SI
+
+    MOV AL,[SI]
+    INC SI
+    SUB AL,[SI]
+    MOV AH,00
+    AAS
+    MOV [BX],AX
+    INC BX
+    INC BX
+    DEC SI
+
+    MOV AL,[SI]
+    INC SI
+    MOV CL,[SI]
+    MUL CL
+    AAM
+    MOV [BX],AX
+    INC BX
+    INC BX
+    DEC SI
+
+    MOV AL,[SI]
+    INC SI
+    MOV AH,00
+    AAD
+    MOV CL,[SI]
+    DIV CL
+    MOV [BX],AX
+    INT 3
+MCODE ENDS
+END START`}]},
+
+{v:[{t:"Que 6 : PALINDROME",
+c:`MDATA SEGMENT
+    PAL DB "YES PALINDROME$"
+    NPAL DB "NOT PALINDROME$"
+    STR DB "MALAYALAM"
+MDATA ENDS
+MCODE SEGMENT
+    ASSUME CS:MCODE, DS:MDATA
+START:  MOV AX,MDATA
+    MOV DS,AX
+    LEA SI,STR
+    MOV BX,SI
+    ADD BX,0008
+    MOV CL,04
+UP: MOV AL,[SI]
+    CMP AL,[BX]
+    JNZ NA
+    INC SI
+    DEC BX
+    DEC CL
+    JNZ UP
+    LEA DX,PAL
+    MOV AH,09
+    INT 21H
+    INT 3
+NA: LEA DX,NPAL
+    MOV AH,09
+    INT 21H
+    INT 3
+MCODE ENDS
+END START`}]},
+
+{v:[{t:"Que 7 : BIOS FUNCTION",
+c:`MCODE SEGMENT
+    ASSUME CS:MCODE
+START:  MOV AH,10H
+    MOV AL,10H
+    MOV BX,0000H
+    MOV CL,63
+    MOV DH,00
+    MOV CH,00
+    INT 10H
+    MOV AH,01
+    MOV CH,00
+    MOV CL,07
+    INT 10H
+    MOV AH,0AH
+    MOV AL,'*'
+    MOV BH,00
+    MOV CX,0020
+    INT 10H
+    INT 3
+MCODE ENDS
+END START`}]},
+
+{v:[{t:"Que 8 : MODIFYING FLAG REGISTER",
+c:`MSTACK SEGMENT
+    DB 40 DUP(0)
+MSTACK ENDS
+MCODE SEGMENT
+    ASSUME CS:MCODE, SS:MSTACK
+START:  MOV AX,MSTACK
+    MOV SS,AX
+    MOV SP,0028H
+    PUSHF
+    POP AX
+    OR AX,0FFFFH
+    PUSH AX
+    POPF
+    INT 3
+MCODE ENDS
+END START`}]}
+];
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+var N=Q.length-1,cur=0,vi=0,text='';
+var $=function(i){return document.getElementById(i)};
+function show(){
+  var v=Q[cur].v[vi];text=v.c;
+  $('ttl').textContent=cur?' C:\\Q'+cur+'.ASM ':' C:\\NONAME.ASM ';
+  $('qt').textContent=v.t;
+  $('code').innerHTML=esc(text)||' ';
+  $('pos').textContent='Q:'+cur+'/'+N+'   Line:1   Col:1';
+  document.title=cur?'Q'+cur+' - COA Practical Exam 2026':'COA Practical Exam 2026';
+  Array.prototype.forEach.call($('qs').querySelectorAll('button'),function(b,i){b.className=i===cur?'on':''});
+  var vs=$('vs');vs.innerHTML='';
+  if(Q[cur].v.length>1)Q[cur].v.forEach(function(x,i){var b=document.createElement('button');b.type='button';b.textContent=x.n;b.className=i===vi?'on':'';b.onclick=function(){vi=i;show()};vs.appendChild(b)});
+  $('cp').textContent='[ Copy Code ]';$('cp').className='';
+  $('cp').style.visibility=cur?'visible':'hidden';
+}
+function go(i){if(i<0||i>N)return;cur=i;vi=0;show();window.scrollTo(0,0)}
+Q.forEach(function(_,i){var b=document.createElement('button');b.type='button';b.textContent=i;b.title=i?'Question '+i:'Blank screen';b.onclick=function(){go(i)};$('qs').appendChild(b)});
+$('cp').onclick=function(){
+  var b=$('cp');
+  function done(){b.textContent='[ Copied! ]';b.className='ok';setTimeout(function(){b.textContent='[ Copy Code ]';b.className=''},1600)}
+  function fb(){var a=document.createElement('textarea');a.value=text;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(a);done()}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,fb)}else fb();
+};
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
+show();
+</script>
+</body>
+</html>
